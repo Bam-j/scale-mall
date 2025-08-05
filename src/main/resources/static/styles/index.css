@@ -1,0 +1,29 @@
+html {
+  font-size: 20px;
+}
+
+.header {
+  margin-left: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.container {
+  display: flex;
+  margin-left: 1rem;
+}
+
+.item-wrapper {
+  position: relative;
+  border: 1px solid #ddd;
+  margin: 1rem 1rem;
+  cursor: pointer;
+}
+
+.item-wrapper .item-img {
+  width: 256px;
+  height: 256px;
+}
+
+.item-wrapper .item-name {
+  margin-left: 1rem;
+}

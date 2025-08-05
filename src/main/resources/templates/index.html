@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상점 홈페이지</title>
+  <link rel="stylesheet" th:href="@{/styles/index.css}">
+</head>
+
+<body>
+<header class="header">
+  <h2 class="header-text">모두가 원하는 상점</h2>
+</header>
+<main class="container">
+  <section class="content">
+    <!-- 구조를 위한 일시 상품 구조. 상품 정보 받아오는 식으로 변경하기 -->
+    <a th:href="@{/api/v1/item/detail}">
+      <div class="item-wrapper">
+        <img class="item-img" th:src="@{/images/item_img.png}" alt="상품 이미지" />
+        <h5 class="item-name">모두가 원하는 상품</h5>
+      </div>
+    </a>
+  </section>
+</main>
+</body>
+</html>
