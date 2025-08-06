@@ -17,7 +17,7 @@ public class ProductCacheService {
     private final ObjectMapper objectMapper;
 
     public Mono<Boolean> saveProductToRedis(ProductResponse productResponse) {
-        String key = "product: " + productResponse.id();
+        String key = "product:" + productResponse.id();
 
         try {
             String json = objectMapper.writeValueAsString(productResponse);

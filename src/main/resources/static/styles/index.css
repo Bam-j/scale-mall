@@ -26,4 +26,9 @@ html {
 
 .item-wrapper .item-name {
   margin-left: 1rem;
+  font-weight: bold;
+}
+
+.item-wrapper .item-price {
+  margin-right: 1rem;
 }
