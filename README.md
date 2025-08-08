@@ -1,5 +1,6 @@
 # Scale Mall
 - Redis를 활용한 대규모 트래픽 분산 처리 쇼핑몰 프로젝트
+- 하나의 한정 상품에 수 많은 고객들이 구매 요청을 하고 이를 제어
 
 ---
 
@@ -15,4 +16,4 @@
 ## 사용기술
 - 프론트엔드: Thymeleaf, CSS
 - 백엔드: Java, Spring Boot, Spring Webflux, Redis
-- Docker, Apache JMeter
+- Docker, Apache JMeter, Git
