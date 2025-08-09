@@ -4,7 +4,7 @@ import com.joo.scalemall.dto.PurchaseRequest;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PurchaseSystem {
+public class PurchaseService {
 
     public void purchase(PurchaseRequest purchaseRequest) {
         Long id = purchaseRequest.id();
