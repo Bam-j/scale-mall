@@ -14,12 +14,13 @@ public class RedisProductDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        //상황에 따라 stock 변경하기
         ProductResponse productResponse = new ProductResponse(
             1L,
             "[한정 판매] 키링",
             1_000L,
             "글로벌 히트 키링, 한정 판매합니다.",
-            99L    //99L, 999L, 9999L, ...
+            99L
         );
 
         productCacheService
