@@ -39,4 +39,9 @@ public class ProductCacheService {
                 }
             });
     }
+
+    public Mono<Boolean> initStockIfAbsent(Long id, Long stock) {
+        String stockKey = "stock:product" + id;
+        return reactiveRedisTemplate.opsForValue().setIfAbsent(stockKey, String.valueOf(stock));
+    }
 }

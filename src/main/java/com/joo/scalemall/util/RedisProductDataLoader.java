@@ -32,6 +32,14 @@ public class RedisProductDataLoader implements CommandLineRunner {
                     System.out.println("Data Insert Failed");
                 }
             })
+            .then(productCacheService.initStockIfAbsent(productResponse.id(), productResponse.stock()))
+            .doOnSuccess(init -> {
+                if (Boolean.TRUE.equals(init)) {
+                    System.out.println("Stock Key Init Successfully");
+                } else {
+                    System.out.println("Stock Key Already Exists (skip)");
+                }
+            })
             .doOnError(error -> {
                 System.out.println("Data Insert Failed (Error): " + error.getMessage());
             })
