@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.joo.scalemall.dto.ProductResponse;
 import com.joo.scalemall.util.enums.DecrementResult;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
 import org.springframework.data.redis.core.script.RedisScript;
@@ -74,5 +75,12 @@ public class ProductCacheService {
                     default: return DecrementResult.NO_STOCK_KEY;
                 }
             });
+    }
+
+    public Mono<Long> getStock(Long id) {
+        String key = "stock:product:" + id;
+        return reactiveStringRedisTemplate.opsForValue()
+            .get(key)
+            .map(Long::parseLong);
     }
 }
