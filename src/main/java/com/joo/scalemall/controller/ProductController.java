@@ -1,7 +1,8 @@
 package com.joo.scalemall.controller;
 
+import com.joo.scalemall.dto.ApiResponse;
+import com.joo.scalemall.dto.PurchasePayload;
 import com.joo.scalemall.dto.PurchaseRequest;
-import com.joo.scalemall.service.ProductCacheService;
 import com.joo.scalemall.service.ProductService;
 import com.joo.scalemall.service.PurchaseService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -23,12 +25,15 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/{id}/stock")
-    public Mono<ResponseEntity<String>> getStock(@PathVariable Long id){
+    public Mono<ResponseEntity<String>> getStock(@PathVariable Long id) {
         return productService.getStock(id);
     }
 
     @PostMapping("/purchase")
-    public Mono<ResponseEntity<String>> purchase(@RequestBody PurchaseRequest purchaseRequest) {
-        return purchaseService.purchase(purchaseRequest);
+    public Mono<ResponseEntity<ApiResponse<PurchasePayload>>> purchase(
+        @RequestBody PurchaseRequest purchaseRequest,
+        ServerWebExchange exchange
+    ) {
+        return purchaseService.purchase(purchaseRequest, exchange);
     }
 }

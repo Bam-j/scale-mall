@@ -1,9 +1,13 @@
 package com.joo.scalemall.service;
 
+import com.joo.scalemall.dto.ApiResponse;
+import com.joo.scalemall.dto.PurchasePayload;
 import com.joo.scalemall.dto.PurchaseRequest;
+import com.joo.scalemall.util.enums.ResultCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -12,19 +16,35 @@ public class PurchaseService {
 
     private final ProductCacheService productCacheService;
 
-    public Mono<ResponseEntity<String>> purchase(PurchaseRequest purchaseRequest) {
+    public Mono<ResponseEntity<ApiResponse<PurchasePayload>>> purchase(
+        PurchaseRequest purchaseRequest,
+        ServerWebExchange exchange
+    ) {
         Long id = purchaseRequest.id();
+        String path = exchange.getRequest().getPath().value();
 
         return productCacheService.decrementStockSafely(id)
-            .map(result -> {
+            .flatMap(result -> {
                 switch (result) {
                     case SUCCESS:
-                        return ResponseEntity.ok("구매 성공");
+                        return productCacheService.getStock(id)
+                            .map(remain -> ResponseEntity.ok(
+                                ApiResponse.ok(
+                                    ResultCode.PURCHASE_SUCCESS.name(),
+                                    "구매 성공",
+                                    new PurchasePayload(id, remain),
+                                    path
+                                )
+                            ));
+
                     case OUT_OF_STOCK:
-                        return ResponseEntity.status(409).body("품절");
+                        return Mono.just(ResponseEntity.status(409).body(
+                            ApiResponse.error(ResultCode.OUT_OF_STOCK.name(), "품절", path)));
+
                     case NO_STOCK_KEY:
                     default:
-                        return ResponseEntity.status(500).body("재고 키 없음");
+                        return Mono.just(ResponseEntity.status(500).body(
+                            ApiResponse.error(ResultCode.NO_STOCK_KEY.name(), "재고 키 없음", path)));
                 }
             });
     }
