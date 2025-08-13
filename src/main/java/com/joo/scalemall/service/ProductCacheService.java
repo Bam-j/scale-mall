@@ -45,7 +45,7 @@ public class ProductCacheService {
     }
 
     public Mono<Boolean> initStockIfAbsent(Long id, Long stock) {
-        String stockKey = "stock:product:" + id; // 콜론 누락 수정
+        String stockKey = "stock:product:" + id;
         return reactiveStringRedisTemplate.opsForValue()
             .setIfAbsent(stockKey, String.valueOf(stock));
     }
