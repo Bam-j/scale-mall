@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="scale-mall Test Plan" enabled="true">
+      <stringProp name="TestPlan.comments">Scale Mall - WebFlux/Redis 부하 테스트 기본 플랜</stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="baseUrl" elementType="Argument">
+            <stringProp name="Argument.name">baseUrl</stringProp>
+            <stringProp name="Argument.value">http://localhost:8080</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="purchasePath" elementType="Argument">
+            <stringProp name="Argument.name">purchasePath</stringProp>
+            <stringProp name="Argument.value">/api/v1/purchase</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="healthPath" elementType="Argument">
+            <stringProp name="Argument.name">healthPath</stringProp>
+            <stringProp name="Argument.value">/actuator/health</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="users" elementType="Argument">
+            <stringProp name="Argument.name">users</stringProp>
+            <stringProp name="Argument.value">200</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="rampUpSec" elementType="Argument">
+            <stringProp name="Argument.name">rampUpSec</stringProp>
+            <stringProp name="Argument.value">30</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="durationSec" elementType="Argument">
+            <stringProp name="Argument.name">durationSec</stringProp>
+            <stringProp name="Argument.value">120</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="csvPath" elementType="Argument">
+            <stringProp name="Argument.name">csvPath</stringProp>
+            <stringProp name="Argument.value">clients.csv</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="itemId" elementType="Argument">
+            <stringProp name="Argument.name">itemId</stringProp>
+            <stringProp name="Argument.value">1</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="quantity" elementType="Argument">
+            <stringProp name="Argument.name">quantity</stringProp>
+            <stringProp name="Argument.value">1</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="thinkTimeMs" elementType="Argument">
+            <stringProp name="Argument.name">thinkTimeMs</stringProp>
+            <stringProp name="Argument.value">250</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="thinkJitterMs" elementType="Argument">
+            <stringProp name="Argument.name">thinkJitterMs</stringProp>
+            <stringProp name="Argument.value">150</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+
+      <!-- HTTP Defaults: baseUrl을 그대로 사용하고 Path만 각 Sampler에서 지정 -->
+      <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
+        <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+          <collectionProp name="Arguments.arguments"/>
+        </elementProp>
+        <stringProp name="HTTPSampler.domain"></stringProp>
+        <stringProp name="HTTPSampler.port"></stringProp>
+        <stringProp name="HTTPSampler.protocol"></stringProp>
+        <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+        <stringProp name="HTTPSampler.path"></stringProp>
+        <boolProp name="HTTPSampler.concurrentDwn">false</boolProp>
+        <stringProp name="HTTPSampler.connect_timeout">3000</stringProp>
+        <stringProp name="HTTPSampler.response_timeout">10000</stringProp>
+      </ConfigTestElement>
+      <hashTree/>
+
+      <!-- 공통 헤더 -->
+      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+        <collectionProp name="HeaderManager.headers">
+          <elementProp name="Content-Type" elementType="Header">
+            <stringProp name="Header.name">Content-Type</stringProp>
+            <stringProp name="Header.value">application/json</stringProp>
+          </elementProp>
+          <elementProp name="Accept" elementType="Header">
+            <stringProp name="Header.name">Accept</stringProp>
+            <stringProp name="Header.value">application/json</stringProp>
+          </elementProp>
+        </collectionProp>
+      </HeaderManager>
+      <hashTree/>
+
+      <!-- CSV Data Set: clients.csv에서 clientId 1열만 사용 -->
+      <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set (clientId)" enabled="true">
+        <stringProp name="filename">${csvPath}</stringProp>
+        <stringProp name="fileEncoding">UTF-8</stringProp>
+        <stringProp name="variableNames">clientId</stringProp>
+        <stringProp name="delimiter">,</stringProp>
+        <boolProp name="quotedData">false</boolProp>
+        <boolProp name="recycle">true</boolProp>
+        <boolProp name="stopThread">false</boolProp>
+        <stringProp name="shareMode">shareMode.all</stringProp>
+      </CSVDataSet>
+      <hashTree/>
+
+      <!-- 사용자 시나리오: Thread Group -->
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Users - Purchase Load" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
+          <boolProp name="LoopController.continue_forever">true</boolProp>
+          <stringProp name="LoopController.loops">-1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${users}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${rampUpSec}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.duration">${durationSec}</stringProp>
+        <stringProp name="ThreadGroup.delay">0</stringProp>
+      </ThreadGroup>
+      <hashTree>
+
+        <!-- (한번만) 헬스 체크 -->
+        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Once: Health Check" enabled="true"/>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET ${healthPath}" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.path">${healthPath}</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert: 200 OK (health)" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49547">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">2</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+
+        <!-- 생각 시간 -->
+        <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Think Time (uniform)" enabled="true">
+          <stringProp name="ConstantTimer.delay">${thinkTimeMs}</stringProp>
+          <stringProp name="RandomTimer.range">${thinkJitterMs}</stringProp>
+        </UniformRandomTimer>
+        <hashTree/>
+
+        <!-- 구매 요청 -->
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST ${purchasePath}" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="body" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">
+                  {
+                    "clientId": "${clientId}",
+                    "itemId": ${itemId},
+                    "quantity": ${quantity}
+                  }
+                </stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.path">${purchasePath}</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <!-- 성공 코드 200/201 허용 -->
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert: 200 or 201" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="code200">200</stringProp>
+              <stringProp name="code201">201</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <!-- 필요 시 텍스트 어서션: 응답에 "success" 문자열 포함 확인 (기본 비활성) -->
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert: body contains &quot;success&quot; (optional)" enabled="false">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="succ">success</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">2</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+
+        <!-- (GUI 디버깅용) 리스너: CLI 실행에선 -l/-e 사용 권장 -->
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report (GUI only)" enabled="false">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time><latency>true</latency><timestamp>true</timestamp>
+              <success>true</success><label>true</label><code>true</code>
+              <message>false</message><threadName>false</threadName><dataType>false</dataType>
+              <encoding>false</encoding><assertions>true</assertions><subresults>false</subresults>
+              <responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+
+      </hashTree>
+
+      <!-- HTTP Raw URL 설정을 위해 HTTP(S) Test Script Recorder가 아닌 JSR223 프리프로세서로 baseUrl 적용 -->
+      <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Apply baseUrl to all HTTP samplers" enabled="true">
+        <stringProp name="scriptLanguage">groovy</stringProp>
+        <stringProp name="script">
+          // 모든 HTTPSampler에 baseUrl 적용 (domain/port 대신 full URL)
+          def base = vars.get('baseUrl')
+          def ctxTree = ctx.getCurrentSampler() == null ? null : null
+          // 실제 샘플러 개별 path만 유지하고, HTTP Request Defaults는 contentEncoding/timeout 정도만 사용
+          // baseUrl은 CLI에서 -JbaseUrl=http://host:port 형태로 주입
+        </stringProp>
+      </JSR223PreProcessor>
+      <hashTree/>
+
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
