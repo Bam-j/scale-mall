@@ -1,0 +1,14 @@
+users=10000
+rampUpSec=180
+durationSec=300
+
+baseUrl=http://localhost:8080
+purchasePath=/api/products/purchase
+healthPath=/actuator/health
+
+csvPath=clients.csv
+itemId=1
+quantity=1
+
+thinkTimeMs=250
+thinkJitterMs=150
