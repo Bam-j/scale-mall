@@ -17,4 +17,4 @@
 ## 사용기술
 - 프론트엔드: Thymeleaf, CSS
 - 백엔드: Java, Spring Boot, Spring Webflux, Redis
-- Docker, Apache JMeter, Git
+- Docker(Redis 컨테이너 사용), Apache JMeter(부하 테스트), Git(버전 관리)
