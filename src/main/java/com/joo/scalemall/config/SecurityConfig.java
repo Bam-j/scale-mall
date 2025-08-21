@@ -13,8 +13,7 @@ public class SecurityConfig {
         return http
             .authorizeExchange(ex -> ex
                 .pathMatchers("/actuator/**").permitAll()
-                .anyExchange().permitAll()
-            )
+                .anyExchange().permitAll())
             .csrf(ServerHttpSecurity.CsrfSpec::disable)
             .build();
     }
