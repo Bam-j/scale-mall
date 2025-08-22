@@ -10,59 +10,64 @@
       <elementProp name="TestPlan.user_defined_variables" elementType="Arguments"
         guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
         <collectionProp name="Arguments.arguments">
+          <!-- 외부 프로퍼티 주입: __P(key, default) -->
           <elementProp name="baseUrl" elementType="Argument">
             <stringProp name="Argument.name">baseUrl</stringProp>
-            <stringProp name="Argument.value">http://localhost:8080</stringProp>
+            <stringProp name="Argument.value">${__P(baseUrl,http://localhost:8080)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="purchasePath" elementType="Argument">
             <stringProp name="Argument.name">purchasePath</stringProp>
-            <stringProp name="Argument.value">/api/products/purchase</stringProp>
+            <stringProp name="Argument.value">${__P(purchasePath,/api/products/purchase)}
+            </stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="healthPath" elementType="Argument">
             <stringProp name="Argument.name">healthPath</stringProp>
-            <stringProp name="Argument.value">/actuator/health</stringProp>
+            <stringProp name="Argument.value">${__P(healthPath,/actuator/health)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+
           <elementProp name="users" elementType="Argument">
             <stringProp name="Argument.name">users</stringProp>
-            <stringProp name="Argument.value">200</stringProp>
+            <stringProp name="Argument.value">${__P(users,100)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="rampUpSec" elementType="Argument">
             <stringProp name="Argument.name">rampUpSec</stringProp>
-            <stringProp name="Argument.value">30</stringProp>
+            <stringProp name="Argument.value">${__P(rampUpSec,10)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="durationSec" elementType="Argument">
             <stringProp name="Argument.name">durationSec</stringProp>
-            <stringProp name="Argument.value">120</stringProp>
+            <stringProp name="Argument.value">${__P(durationSec,60)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+
           <elementProp name="csvPath" elementType="Argument">
             <stringProp name="Argument.name">csvPath</stringProp>
-            <stringProp name="Argument.value">clients.csv</stringProp>
+            <stringProp name="Argument.value">${__P(csvPath,clients.csv)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="itemId" elementType="Argument">
             <stringProp name="Argument.name">itemId</stringProp>
-            <stringProp name="Argument.value">1</stringProp>
+            <stringProp name="Argument.value">${__P(itemId,1)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="quantity" elementType="Argument">
             <stringProp name="Argument.name">quantity</stringProp>
-            <stringProp name="Argument.value">1</stringProp>
+            <stringProp name="Argument.value">${__P(quantity,1)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+
           <elementProp name="thinkTimeMs" elementType="Argument">
             <stringProp name="Argument.name">thinkTimeMs</stringProp>
-            <stringProp name="Argument.value">250</stringProp>
+            <stringProp name="Argument.value">${__P(thinkTimeMs,250)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="thinkJitterMs" elementType="Argument">
             <stringProp name="Argument.name">thinkJitterMs</stringProp>
-            <stringProp name="Argument.value">150</stringProp>
+            <stringProp name="Argument.value">${__P(thinkJitterMs,150)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -71,7 +76,7 @@
     </TestPlan>
     <hashTree>
 
-      <!-- HTTP Defaults: baseUrl을 그대로 사용하고 Path만 각 Sampler에서 지정 -->
+      <!-- HTTP Defaults -->
       <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement"
         testname="HTTP Request Defaults" enabled="true">
         <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -104,7 +109,7 @@
       </HeaderManager>
       <hashTree/>
 
-      <!-- CSV Data Set: clients.csv에서 clientId 1열만 사용 -->
+      <!-- CSV Data Set: clientId 1열 사용 / 재사용 금지 -->
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set (clientId)"
         enabled="true">
         <stringProp name="filename">${csvPath}</stringProp>
@@ -118,7 +123,7 @@
       </CSVDataSet>
       <hashTree/>
 
-      <!-- 사용자 시나리오: Thread Group -->
+      <!-- Thread Group: Scheduler 사용 -->
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup"
         testname="Users - Purchase Load" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
@@ -170,7 +175,7 @@
           </hashTree>
         </hashTree>
 
-        <!-- 생각 시간 -->
+        <!-- Think Time -->
         <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer"
           testname="Think Time (uniform)" enabled="true">
           <stringProp name="ConstantTimer.delay">${thinkTimeMs}</stringProp>
@@ -204,7 +209,6 @@
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <!-- 성공 코드 200/201 허용 -->
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion"
             testname="Assert: 200 or 201" enabled="true">
             <collectionProp name="Asserion.test_strings">
@@ -216,7 +220,6 @@
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <!-- 필요 시 텍스트 어서션: 응답에 "success" 문자열 포함 확인 (기본 비활성) -->
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion"
             testname="Assert: body contains &quot;success&quot; (optional)" enabled="false">
             <collectionProp name="Asserion.test_strings">
@@ -229,7 +232,7 @@
           <hashTree/>
         </hashTree>
 
-        <!-- (GUI 디버깅용) 리스너: CLI 실행에선 -l/-e 사용 권장 -->
+        <!-- (GUI 디버깅용) 리스너: CLI에서는 -l 사용 -->
         <ResultCollector guiclass="SummaryReport" testclass="ResultCollector"
           testname="Summary Report (GUI only)" enabled="false">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
@@ -271,22 +274,19 @@
 
       </hashTree>
 
-      <!-- HTTP Raw URL 설정을 위해 HTTP(S) Test Script Recorder가 아닌 JSR223 프리프로세서로 baseUrl 적용 -->
+      <!-- baseUrl 적용 PreProcessor -->
       <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor"
         testname="Apply baseUrl to all HTTP samplers" enabled="true">
         <stringProp name="scriptLanguage">groovy</stringProp>
         <stringProp name="script">
           import org.apache.jmeter.protocol.http.sampler.HTTPSamplerProxy
-
           def base = vars.get('baseUrl')
           if (!base) return
-
           def u = new java.net.URL(base)
           def proto = u.getProtocol()
           def host = u.getHost()
           def port = (u.getPort() != -1) ? u.getPort() : ("https".equalsIgnoreCase(proto) ? 443 :
           80)
-
           def s = ctx.getCurrentSampler()
           if (s instanceof HTTPSamplerProxy) {
           s.setProtocol(proto)
