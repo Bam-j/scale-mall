@@ -7,7 +7,7 @@ purchasePath=/api/products/purchase
 healthPath=/actuator/health
 
 csvPath=clients.csv
-itemId=1
+productId = ${__P(productId,1)}
 quantity=1
 
 thinkTimeMs=250

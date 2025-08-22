@@ -194,7 +194,7 @@
                 <stringProp name="Argument.value">
                   {
                   "clientId": "${clientId}",
-                  "itemId": ${itemId},
+                  "productId": ${productId},
                   "quantity": ${quantity}
                   }
                 </stringProp>
