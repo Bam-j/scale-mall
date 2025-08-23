@@ -49,9 +49,9 @@
             <stringProp name="Argument.value">${__P(csvPath,clients.csv)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
-          <elementProp name="itemId" elementType="Argument">
-            <stringProp name="Argument.name">itemId</stringProp>
-            <stringProp name="Argument.value">${__P(itemId,1)}</stringProp>
+          <elementProp name="productId" elementType="Argument">
+            <stringProp name="Argument.name">productId</stringProp>
+            <stringProp name="Argument.value">${__P(productId,1)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="quantity" elementType="Argument">
