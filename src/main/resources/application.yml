@@ -32,10 +32,10 @@ spring:
     redis:
       client-type: lettuce
       host: ${REDIS_HOST:localhost}
-      port: ${REDIS_PORT:6379}
+      port: 6379
       username: ${REDIS_USERNAME:}
       password: ${REDIS_PASSWORD:}
-      database: ${REDIS_DATABASE:0}
+      database: 0
       timeout: 2s
       lettuce:
         pool:
