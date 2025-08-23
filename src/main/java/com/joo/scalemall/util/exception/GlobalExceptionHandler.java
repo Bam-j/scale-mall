@@ -2,6 +2,7 @@ package com.joo.scalemall.util.exception;
 
 import com.joo.scalemall.dto.ApiResponse;
 import com.joo.scalemall.util.enums.ResultCode;
+import com.joo.scalemall.util.exception.custom.NoStockKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,6 +28,18 @@ public class GlobalExceptionHandler {
         var body = ApiResponse.error(ResultCode.BAD_REQUEST.name(), ex.getMessage(),
             exchange.getRequest().getPath().value());
         return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body));
+    }
+
+    @ExceptionHandler(NoStockKeyException.class)
+    public Mono<ResponseEntity<ApiResponse<Object>>> handleNoStock(
+        NoStockKeyException ex, ServerWebExchange exchange
+    ) {
+        if (isActuator(exchange)) {
+            return Mono.error(ex);
+        }
+        String path = exchange.getRequest().getPath().value();
+        var body = ApiResponse.error("NO_STOCK_KEY", "재고 키 없음", path);
+        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(body));
     }
 
     @ExceptionHandler(Throwable.class)

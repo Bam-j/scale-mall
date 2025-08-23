@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.joo.scalemall.dto.ProductResponse;
 import com.joo.scalemall.util.enums.DecrementResult;
 import com.joo.scalemall.util.enums.PurchaseResult;
+import com.joo.scalemall.util.exception.custom.NoStockKeyException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
@@ -85,8 +86,10 @@ public class ProductCacheService {
         String key = "stock:product:" + id;
         return reactiveStringRedisTemplate.opsForValue()
             .get(key)
+            .switchIfEmpty(Mono.error(new NoStockKeyException("재고 키 없음: " + key)))
             .map(Long::parseLong);
     }
+
 
     public Mono<PurchaseResult> purchaseOnce(Long productId, String clientId) {
         String stockKey = "stock:product:" + productId;
@@ -100,7 +103,7 @@ public class ProductCacheService {
                 if (redis.call('SISMEMBER', purchasedKey, cid) == 1) then
                   return -2 -- ALREADY_PURCHASED
                 end
-
+            
                 local v = redis.call('GET', stockKey)
                 if (not v) then
                   return -1 -- NO_STOCK_KEY
