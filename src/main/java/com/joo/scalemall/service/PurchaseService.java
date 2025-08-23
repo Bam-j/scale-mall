@@ -20,7 +20,7 @@ public class PurchaseService {
         PurchaseRequest purchaseRequest,
         ServerWebExchange exchange
     ) {
-        Long id = purchaseRequest.id();
+        Long id = purchaseRequest.productId();
         String path = exchange.getRequest().getPath().value();
 
         return productCacheService.decrementStockSafely(id)

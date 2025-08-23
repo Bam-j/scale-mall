@@ -1,5 +1,7 @@
 package com.joo.scalemall.dto;
 
 public record PurchaseRequest(
-    Long id
+    String clientId,
+    Long productId,
+    Integer quantity
 ) { }
