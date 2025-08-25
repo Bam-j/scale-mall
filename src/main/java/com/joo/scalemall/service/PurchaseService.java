@@ -16,6 +16,7 @@ public class PurchaseService {
 
     private final ProductCacheService productCacheService;
 
+    //상품 구매 요청 처리
     public Mono<ResponseEntity<ApiResponse<PurchasePayload>>> purchase(
         PurchaseRequest purchaseRequest,
         ServerWebExchange exchange

@@ -24,11 +24,13 @@ public class ProductController {
     private final PurchaseService purchaseService;
     private final ProductService productService;
 
+    //상세 페이지에서 잔여 재고 요청
     @GetMapping("/{id}/stock")
     public Mono<ResponseEntity<String>> getStock(@PathVariable Long id) {
         return productService.getStock(id);
     }
 
+    //상세 페이지에서 구매 버튼 클릭을 통한 구매 요청
     @PostMapping("/purchase")
     public Mono<ResponseEntity<ApiResponse<PurchasePayload>>> purchase(
         @RequestBody PurchaseRequest purchaseRequest,

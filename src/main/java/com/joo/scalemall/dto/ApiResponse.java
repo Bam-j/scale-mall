@@ -2,6 +2,7 @@ package com.joo.scalemall.dto;
 
 import java.time.Instant;
 
+//공통 응답 DTO
 public record ApiResponse<T>(
     String status,
     String code,

@@ -20,6 +20,7 @@ public class ProductCacheService {
     private final ReactiveStringRedisTemplate reactiveStringRedisTemplate;
     private final ObjectMapper objectMapper;
 
+    //첫 실행 시
     public Mono<Boolean> saveProductToRedis(ProductResponse productResponse) {
         String key = "product:" + productResponse.id();
         try {
@@ -30,6 +31,7 @@ public class ProductCacheService {
         }
     }
 
+    //레디스 DB로부터 상품 정보 조회 및 반환
     public Mono<ProductResponse> getProductFromRedis(Long id) {
         String key = "product:" + id;
         return reactiveStringRedisTemplate.opsForValue()
@@ -45,12 +47,14 @@ public class ProductCacheService {
             });
     }
 
+    //테스트 시작 전 재고 없는 경우 초기화
     public Mono<Boolean> initStockIfAbsent(Long id, Long stock) {
         String stockKey = "stock:product:" + id;
         return reactiveStringRedisTemplate.opsForValue()
             .setIfAbsent(stockKey, String.valueOf(stock));
     }
 
+    //구매 서비스 수행 후 재고 감소
     public Mono<DecrementResult> decrementStockSafely(Long id) {
         String stockKey = "stock:product:" + id;
 
@@ -82,62 +86,12 @@ public class ProductCacheService {
             });
     }
 
+    //재고 조회
     public Mono<Long> getStock(Long id) {
         String key = "stock:product:" + id;
         return reactiveStringRedisTemplate.opsForValue()
             .get(key)
             .switchIfEmpty(Mono.error(new NoStockKeyException("재고 키 없음: " + key)))
             .map(Long::parseLong);
-    }
-
-
-    public Mono<PurchaseResult> purchaseOnce(Long productId, String clientId) {
-        String stockKey = "stock:product:" + productId;
-        String purchasedKey = "purchased:product:" + productId;
-
-        String lua = """
-                local stockKey     = KEYS[1]
-                local purchasedKey = KEYS[2]
-                local cid          = ARGV[1]
-            
-                if (redis.call('SISMEMBER', purchasedKey, cid) == 1) then
-                  return -2 -- ALREADY_PURCHASED
-                end
-            
-                local v = redis.call('GET', stockKey)
-                if (not v) then
-                  return -1 -- NO_STOCK_KEY
-                end
-                v = tonumber(v)
-                if (v <= 0) then
-                  return 0  -- OUT_OF_STOCK
-                end
-            
-                redis.call('DECR', stockKey)
-                redis.call('SADD', purchasedKey, cid)
-            
-                return 1    -- SUCCESS
-            """;
-
-        RedisScript<Long> script = RedisScript.of(lua, Long.class);
-
-        return reactiveStringRedisTemplate
-            .execute(script, List.of(stockKey, purchasedKey), List.of(clientId))
-            .single()
-            .map(code -> {
-                int c = code.intValue();
-                switch (c) {
-                    case 1:
-                        return PurchaseResult.SUCCESS;
-                    case 0:
-                        return PurchaseResult.OUT_OF_STOCK;
-                    case -1:
-                        return PurchaseResult.NO_STOCK_KEY;
-                    case -2:
-                        return PurchaseResult.ALREADY_PURCHASED;
-                    default:
-                        return PurchaseResult.NO_STOCK_KEY;
-                }
-            });
     }
 }
