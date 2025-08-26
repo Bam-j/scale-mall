@@ -1,0 +1,14 @@
+users=101
+rampUpSec=10
+durationSec=60
+
+baseUrl=http://localhost:8080
+purchasePath=/api/products/purchase
+healthPath=/actuator/health
+
+csvPath=clients.csv
+productId = ${__P(productId,1)}
+quantity=1
+
+thinkTimeMs=250
+thinkJitterMs=150
