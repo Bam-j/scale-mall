@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="scale-mall Test Plan"
-      enabled="true">
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="scale-mall Test Plan" enabled="true">
       <stringProp name="TestPlan.comments">Scale Mall - WebFlux/Redis 부하 테스트 기본 플랜</stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
       <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
-      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments"
-        guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
         <collectionProp name="Arguments.arguments">
           <!-- 외부 프로퍼티 주입: __P(key, default) -->
           <elementProp name="baseUrl" elementType="Argument">
@@ -18,8 +16,8 @@
           </elementProp>
           <elementProp name="purchasePath" elementType="Argument">
             <stringProp name="Argument.name">purchasePath</stringProp>
-            <stringProp name="Argument.value">${__P(purchasePath,/api/products/purchase)}
-            </stringProp>
+            <!-- 줄바꿈 제거 -->
+            <stringProp name="Argument.value">${__P(purchasePath,/api/products/purchase)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="healthPath" elementType="Argument">
@@ -77,8 +75,7 @@
     <hashTree>
 
       <!-- HTTP Defaults -->
-      <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement"
-        testname="HTTP Request Defaults" enabled="true">
+      <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
         <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
           <collectionProp name="Arguments.arguments"/>
         </elementProp>
@@ -94,8 +91,7 @@
       <hashTree/>
 
       <!-- 공통 헤더 -->
-      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager"
-        enabled="true">
+      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
         <collectionProp name="HeaderManager.headers">
           <elementProp name="Content-Type" elementType="Header">
             <stringProp name="Header.name">Content-Type</stringProp>
@@ -110,8 +106,7 @@
       <hashTree/>
 
       <!-- CSV Data Set: clientId 1열 사용 / 재사용 금지 -->
-      <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set (clientId)"
-        enabled="true">
+      <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set (clientId)" enabled="true">
         <stringProp name="filename">${csvPath}</stringProp>
         <stringProp name="fileEncoding">UTF-8</stringProp>
         <stringProp name="variableNames">clientId</stringProp>
@@ -124,11 +119,9 @@
       <hashTree/>
 
       <!-- Thread Group: Scheduler 사용 -->
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup"
-        testname="Users - Purchase Load" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Users - Purchase Load" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
-        <elementProp name="ThreadGroup.main_controller" elementType="LoopController"
-          guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
           <boolProp name="LoopController.continue_forever">true</boolProp>
           <stringProp name="LoopController.loops">-1</stringProp>
         </elementProp>
@@ -141,11 +134,9 @@
       <hashTree>
 
         <!-- (한번만) 헬스 체크 -->
-        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController"
-          testname="Once: Health Check" enabled="true"/>
+        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Once: Health Check" enabled="true"/>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy"
-            testname="GET ${healthPath}" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET ${healthPath}" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
@@ -162,8 +153,7 @@
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion"
-              testname="Assert: 200 OK (health)" enabled="true">
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert: 200 OK (health)" enabled="true">
               <collectionProp name="Asserion.test_strings">
                 <stringProp name="49547">200</stringProp>
               </collectionProp>
@@ -176,26 +166,25 @@
         </hashTree>
 
         <!-- Think Time -->
-        <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer"
-          testname="Think Time (uniform)" enabled="true">
+        <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Think Time (uniform)" enabled="true">
           <stringProp name="ConstantTimer.delay">${thinkTimeMs}</stringProp>
           <stringProp name="RandomTimer.range">${thinkJitterMs}</stringProp>
         </UniformRandomTimer>
         <hashTree/>
 
         <!-- 구매 요청 -->
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy"
-          testname="POST ${purchasePath}" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST ${purchasePath}" enabled="true">
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments">
               <elementProp name="body" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <!-- JSON Body: clientId trim, productId/quantity 정수 보정 -->
                 <stringProp name="Argument.value">
                   {
-                  "clientId": "${clientId}",
-                  "productId": ${productId},
-                  "quantity": ${quantity}
+                  "clientId": "${__groovy(vars.get('clientId')?.trim())}",
+                  "productId": ${__intSum(${productId},0)},
+                  "quantity": ${__intSum(${quantity},0)}
                   }
                 </stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
@@ -209,8 +198,7 @@
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion"
-            testname="Assert: 200 or 201" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert: 200 or 201" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="code200">200</stringProp>
               <stringProp name="code201">201</stringProp>
@@ -220,8 +208,7 @@
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion"
-            testname="Assert: body contains &quot;success&quot; (optional)" enabled="false">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert: body contains &quot;success&quot; (optional)" enabled="false">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="succ">success</stringProp>
             </collectionProp>
@@ -233,39 +220,19 @@
         </hashTree>
 
         <!-- (GUI 디버깅용) 리스너: CLI에서는 -l 사용 -->
-        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector"
-          testname="Summary Report (GUI only)" enabled="false">
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report (GUI only)" enabled="false">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
             <value class="SampleSaveConfiguration">
-              <time>true</time>
-              <latency>true</latency>
-              <timestamp>true</timestamp>
-              <success>true</success>
-              <label>true</label>
-              <code>true</code>
-              <message>false</message>
-              <threadName>false</threadName>
-              <dataType>false</dataType>
-              <encoding>false</encoding>
-              <assertions>true</assertions>
-              <subresults>false</subresults>
-              <responseData>false</responseData>
-              <samplerData>false</samplerData>
-              <xml>false</xml>
-              <fieldNames>true</fieldNames>
-              <responseHeaders>false</responseHeaders>
-              <requestHeaders>false</requestHeaders>
-              <responseDataOnError>false</responseDataOnError>
-              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
-              <assertionsResultsToSave>0</assertionsResultsToSave>
-              <bytes>true</bytes>
-              <sentBytes>true</sentBytes>
-              <url>true</url>
-              <threadCounts>true</threadCounts>
-              <idleTime>true</idleTime>
-              <connectTime>true</connectTime>
+              <time>true</time><latency>true</latency><timestamp>true</timestamp>
+              <success>true</success><label>true</label><code>true</code>
+              <message>false</message><threadName>false</threadName><dataType>false</dataType>
+              <encoding>false</encoding><assertions>true</assertions><subresults>false</subresults>
+              <responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
             </value>
           </objProp>
           <stringProp name="filename"></stringProp>
@@ -275,8 +242,7 @@
       </hashTree>
 
       <!-- baseUrl 적용 PreProcessor -->
-      <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor"
-        testname="Apply baseUrl to all HTTP samplers" enabled="true">
+      <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Apply baseUrl to all HTTP samplers" enabled="true">
         <stringProp name="scriptLanguage">groovy</stringProp>
         <stringProp name="script">
           import org.apache.jmeter.protocol.http.sampler.HTTPSamplerProxy
@@ -285,8 +251,7 @@
           def u = new java.net.URL(base)
           def proto = u.getProtocol()
           def host = u.getHost()
-          def port = (u.getPort() != -1) ? u.getPort() : ("https".equalsIgnoreCase(proto) ? 443 :
-          80)
+          def port = (u.getPort() != -1) ? u.getPort() : ("https".equalsIgnoreCase(proto) ? 443 : 80)
           def s = ctx.getCurrentSampler()
           if (s instanceof HTTPSamplerProxy) {
           s.setProtocol(proto)
