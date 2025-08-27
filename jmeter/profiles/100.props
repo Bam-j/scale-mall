@@ -1,14 +1,15 @@
+# --- 부하 인원/기동 ---
 users=100
 rampUpSec=10
-durationSec=60
+# 원샷에서는 durationSec은 의미 없지만 남겨둠(미사용)
+durationSec=5
 
+# --- 타겟/파라미터 ---
 baseUrl=http://localhost:8080
-purchasePath=/api/products/purchase
-healthPath=/actuator/health
-
-csvPath=clients.csv
-productId = ${__P(productId,1)}
+productId=1
 quantity=1
+csvPath=C:\\Users\\juhyu\\scalemall\\clients.csv
 
-thinkTimeMs=250
-thinkJitterMs=150
+# --- 생각시간(원샷이므로 0 권장) ---
+thinkTimeMs=0
+thinkJitterMs=0
