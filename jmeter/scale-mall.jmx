@@ -154,8 +154,9 @@
           </HTTPSamplerProxy>
           <hashTree>
             <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert: 200 or 201" enabled="true">
-              <collectionProp name="Asserion.test_strings">
-                <stringProp name="code2xx">^2\d\d$</stringProp>
+              <collectionProp name="Assertion.test_strings">
+                <stringProp name="code200">200</stringProp>
+                <stringProp name="code201">201</stringProp>
               </collectionProp>
               <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
               <boolProp name="Assertion.assume_success">false</boolProp>
@@ -199,12 +200,13 @@
         </HTTPSamplerProxy>
         <hashTree>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert: 200 or 201" enabled="true">
-            <collectionProp name="Asserion.test_strings">
-              <stringProp name="code2xx">^2\d\d$</stringProp>
+            <collectionProp name="Assertion.test_strings">
+              <stringProp name="code200">200</stringProp>
+              <stringProp name="code201">201</stringProp>
             </collectionProp>
             <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
-            <intProp name="Assertion.test_type">4</intProp>
+            <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert: body contains &quot;success&quot; (optional)" enabled="false">
