@@ -19,3 +19,8 @@
 - 프론트엔드: Thymeleaf, CSS
 - 백엔드: Java, Spring Boot, Spring Webflux, Redis
 - Docker(Redis 컨테이너 사용), Apache JMeter(부하 테스트), Git(버전 관리)
+
+---
+
+## 테스트 및 결과
+- 테스트 및 결과는 [블로그 (작성 중)]()에 작성되었습니다.
