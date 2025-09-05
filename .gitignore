@@ -77,3 +77,4 @@ fabric.properties
 #jemter results
 /jmeter/report/
 /jmeter/results/
+/jmeter/memo.txt
