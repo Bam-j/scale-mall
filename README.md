@@ -23,7 +23,9 @@
 ---
 
 ## 테스트 및 결과
-- 테스트 및 결과는 [블로그 (작성 중)](https://velog.io/@bami/Redis-Spring-WebFlux-%EB%8C%80%EA%B7%9C%EB%AA%A8-%ED%8A%B8%EB%9E%98%ED%94%BD-%EC%B2%98%EB%A6%AC-%EC%8B%9C%EC%8A%A4%ED%85%9C)에 작성되었습니다.
+- 테스트 및 결과는 [블로그](https://velog.io/@bami/Redis-Spring-WebFlux-%EB%8C%80%EA%B7%9C%EB%AA%A8-%ED%8A%B8%EB%9E%98%ED%94%BD-%EC%B2%98%EB%A6%AC-%EC%8B%9C%EC%8A%A4%ED%85%9C)에 작성되었습니다.
+  - 기본 코드 구조 설정편
+  - Jmeter 테스트 수행편
 
 ### 100회 부하
 ![img.png](img.png)
